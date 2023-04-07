@@ -1,9 +1,9 @@
+//BEEDRICKS//BEEDRICKS
+//BEEDRICKS//BEEDRICKS
+//BEEDRICKS//BEEDRICKS
+
 package inventorymanagent;
 
-/**
- *
- * @author rocco
- */
 import java.util.HashMap;
 
 public class Inventory {
