@@ -6,15 +6,19 @@ package inventorymanagement;
  */
 
 import java.util.HashMap;
+import java.util.Scanner;
 
 public class Inventory {
 
-    Product product = new Product(); // to call product methods
+    Product product;
+    UserService userServ = new UserService();
+    Scanner scan = new Scanner(System.in);
     private int productQuantity;
     private HashMap<Integer, Product> inventory;
 
     public Inventory() { // default constructor
         this.inventory = new HashMap<Integer, Product>();
+        this.product  = new Product(); // to call product methods
     }
 
     /*public Inventory(Product product) {
@@ -26,9 +30,20 @@ public class Inventory {
 
     public void addProduct() {
         // Adds the users choice of product to the current inventory
-        System.out.println(product.toString()); // at the moment its not printing the toString????? but it can print it from UserService main
-        
-        //inventory.put(prodToAdd.getProductID(), prodToAdd);
+        product.generateProducts(); // generates products to pick from
+        System.out.println(product.toString()); // 
+
+        System.out.println("SELECT AN ITEM BASED ON ID: ");
+        int productToAdd = scan.nextInt();
+        product = product.getProductById(productToAdd); // selects product to add based on ID from user
+
+        if (product != null) { // if != empty product
+            inventory.put(product.getProductID(), product); // add product to inventory hashmap
+            System.out.println("> Added " + product.getProductName() + " to inventory");
+            
+        } else {
+            System.out.println("> Item not found!");
+        }
     }
 
     /*public Product removeProduct(Product product) {
@@ -46,12 +61,10 @@ public class Inventory {
         output += ("\n╚══════════════════════════════╝");
         
 
-        /*for (HashMap.Entry<Integer, Product> inventoryItem : inventory.entrySet()) {
-            int id = inventoryItem.getKey();
-            Product product = inventoryItem.getValue();
-
-            output += "\nID: %d\n%s\n", id, product.toString()));
-        }*/
+        for (HashMap.Entry<Integer, Product> entry : inventory.entrySet()) {
+            Product product = entry.getValue();
+            output += "\nID: " + product.getProductID() + ", Name: " + product.getProductName() + ", Price: " + product.getPrice() + "\n";
+        }
 
         return output;
     }
