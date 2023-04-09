@@ -43,6 +43,16 @@ public class Product {
         this.price = price;
     }
 
+    public Product getProductById(int productId) {
+    // To search for a product object with just the ID (to add to inventory)
+        for (Product prod : products) {
+            if (prod.getProductID() == productId) {
+                return prod;
+            }
+        }
+        return null;
+    }
+
     public void generateProducts() {
         // temporary? method which creates ample products and adds them to products list
         products.add(new Product(1, "Apples", 0.60));
@@ -57,25 +67,14 @@ public class Product {
         products.add(new Product(10, "Pear", 0.75));
     }
 
-    /*@Override
+    @Override
     public String toString() {
         String output = "╔══════════════════════════════╗";
         output += "\n║                  PRODUCT LIST:                 ║";
-        output += ("\n╚══════════════════════════════╝");
+        output += ("\n╚══════════════════════════════╝\n");
         
         for (Product product : products) {
-            output += product;
-        }
-
-        return output;
-    }*/
-
-    @Override
-    public String toString() {
-        String output = "";
-        
-        for (Product product : products) {
-            output += "ID: " + product.getProductID() + " PRODUCT: " + product.getProductName() + " PRICE: " + product.getPrice() + "\n";
+            output += "ID: " + product.getProductID() + "       PRODUCT: " + product.getProductName() + "       PRICE: " + product.getPrice() + "\n";
         }
 
         return output;
