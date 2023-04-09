@@ -44,7 +44,7 @@ public class UserService {
                 //printInventoryToFile();
                 break;
             case 3:
-                updateInventory(inventory);
+                updateInventoryMenu(inventory);
                 break;
             case 4:
                 System.out.println("> Exiting Inventory Manager...");
@@ -68,7 +68,7 @@ public class UserService {
         System.out.println("╚══════════════════════════════╝");
     }
 
-    public void updateInventory(Inventory inventory) {
+    public void updateInventoryMenu(Inventory inventory) {
         // Gets the user input for the update inventory menu 
         printUpdateInventory();
 
@@ -100,8 +100,9 @@ public class UserService {
         Product product = new Product(); // calls default constructor to acces methods
         UserService userServ = new UserService(); 
 
-        product.generateProducts(); // creates sample products for user to add/remove
-        System.out.println(product.toString());
-        userServ.userMenu(inventory); // starts off the program (would come after user login once implemented)
+        while (true) { // loops menu
+            userServ.userMenu(inventory); // starts off the program (would come after user login once implemented)
+        }
+        
     }
 }
