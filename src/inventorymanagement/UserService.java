@@ -10,13 +10,25 @@ import java.util.Scanner;
 public class UserService {
     
     Scanner scan = new Scanner(System.in);
+    private ProductList productList;
     //private Inventory inventory;
     //private UserService userServ;
 
-    /*public UserService() {
-        Inventory inventory = = new Inventory();
-        UserService userServ = new UserService(); 
-    }*/
+    public UserService() {
+        //Inventory inventory = = new Inventory();
+        this.productList = new ProductList(); // to call product methods
+    }
+
+    public void startProgram(UserService userServ, Inventory inventory) {
+        /*Starts program by calling all the needed methods before user interacts
+        with the CUI. Then runs a loop on the mneu till user exits*/
+
+        productList.generateProducts();
+
+         while (true) { // loops menu till user quits the program
+            userServ.userMenu(inventory); // starts off the program (would come after user login once implemented)
+        }
+    }
 
     public void printUserMenu() {
         // Prints the user menu
@@ -29,10 +41,10 @@ public class UserService {
         System.out.println("║ 4. Exit program                                ║");
         System.out.println("╚══════════════════════════════╝");
     }
+
     public void userMenu(Inventory inventory) {
         // Gets the user input for the update inventory menu
         printUserMenu();
-
         System.out.println("SELECT: ");
         int selectedMenuOption = scan.nextInt();
        
@@ -53,7 +65,6 @@ public class UserService {
             default:
                 System.out.println("> Invalid choice. Please try again.");
         }
-        System.out.println(); // newline for character formatting
     }
 
     public void printUpdateInventory() {
@@ -63,7 +74,7 @@ public class UserService {
         System.out.println("╠══════════════════════════════╣");
         System.out.println("║ 1. Add product to inventory                    ║");
         System.out.println("║ 2. Remove product from inventory               ║");
-        System.out.println("║ 3. Update inventory                            ║");
+        System.out.println("║ 3. Update quantity of a product                ║");
         System.out.println("║ 4. Go back                                     ║");
         System.out.println("╚══════════════════════════════╝");
     }
@@ -77,14 +88,15 @@ public class UserService {
        
         switch (updateInventoryOption) {
             case 1:
-                inventory.addProduct();
+                System.out.println(productList.toString()); // displays products available to add to inventory
+                inventory.addProduct(productList);
                 break;
             case 2:
-
+                inventory.removeProduct(productList);
                 break;
             case 3:
-
-                //break;
+                inventory.adjustQuantity(productList);
+                break;
             case 4:
                 System.out.println("> Back to menu");
                 userMenu(inventory);
@@ -92,17 +104,13 @@ public class UserService {
             default:
                 System.out.println("> Invalid choice. Please try again.");
         }
-        System.out.println(); // newline for character formatting*/
     }
 
     public static void main(String[] args) {
         Inventory inventory = new Inventory(); // calls default constructor to acces methods
-        Product product = new Product(); // calls default constructor to acces methods
-        UserService userServ = new UserService(); 
+        //Product product = new Product(); // calls default constructor to acces methods
+        UserService userServ = new UserService(); // calls default constructor to acces methods
 
-        while (true) { // loops menu
-            userServ.userMenu(inventory); // starts off the program (would come after user login once implemented)
-        }
-        
+        userServ.startProgram(userServ, inventory);        
     }
 }
