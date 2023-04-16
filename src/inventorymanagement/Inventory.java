@@ -7,13 +7,17 @@ package inventorymanagement;
 
 import java.util.HashMap;
 import java.util.Scanner;
+import java.io.File;  
+import java.io.PrintWriter;  
+import java.io.FileOutputStream;
+import java.io.FileNotFoundException;
 
 public class Inventory {
 
-    private Product product;
-    //private UserService userServ = new UserService();
-    ProductList productList;
+    private String inventoryTxt;
     private Scanner scan = new Scanner(System.in);
+    private Product product;
+    ProductList productList;
     private int productQuantity;
     private HashMap<Integer, Product> inventory;
 
@@ -79,6 +83,24 @@ public class Inventory {
         } else {
             System.out.println("> Item not found!");
         }
+    }
+
+    public void inventoryToTxt() {
+        // Gets the current inventory and writes to a newly made txt file  
+        try { 
+            System.out.println("What would you like to save the txt file as: ");
+            inventoryTxt = scan.next();
+            File inventoryFile = new File(inventoryTxt + ".txt");
+
+            if(inventoryTxt != null) { // makes sure user actually entered a file name
+                PrintWriter pw = new PrintWriter(new FileOutputStream(inventoryFile));
+                pw.println(toString()); // Appends the inventory toString to the txt file
+                System.out.println("> Inventory added to file '" + inventoryFile);
+                pw.close();
+            }
+        } catch(FileNotFoundException e){
+            System.out.println(e.getMessage());
+        }   
     }
 
     @Override
