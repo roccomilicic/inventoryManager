@@ -53,7 +53,7 @@ public class UserService {
                 System.out.println(inventory.toString());
                 break;
             case 2:
-                //printInventoryToFile();
+                inventory.inventoryToTxt();
                 break;
             case 3:
                 updateInventoryMenu(inventory);
