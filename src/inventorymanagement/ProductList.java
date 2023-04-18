@@ -8,12 +8,13 @@ package inventorymanagement;
 import java.util.ArrayList;
 
 public class ProductList {
+
     private ArrayList<Product> products;
 
     public ProductList() {
         this.products = new ArrayList<Product>();
     }
-    
+
     public void generateProducts() {
         // Adds products to product list for user to then later add to inventory
         products.add(new Product(1, "Apples", 0.60));
@@ -29,7 +30,7 @@ public class ProductList {
     }
 
     public Product getProductById(int productId) {
-    // To search for a product object with just the ID (to add to inventory)
+        // To search for a product object with just the ID (to add to inventory)
         for (Product prod : products) {
             if (prod.getProductID() == productId) {
                 return prod;
@@ -39,15 +40,20 @@ public class ProductList {
     }
 
     @Override
-    public String toString() {
-        String output = "╔══════════════════════════════╗";
-        output += "\n║                  PRODUCT LIST:                 ║";
-        output += ("\n╚══════════════════════════════╝\n");
-        
-        for (Product product : products) {
-            output += "ID: " + product.getProductID() + "       PRODUCT: " + product.getProductName() + "       PRICE: " + product.getPrice() + "\n";
-        }
+   public String toString() {
+    String output = "+------------------------------------------+\n";
+    output += "|                      PRODUCT LIST:                     |\n";
+    output += "+--------+----------------------+----------+\n";
+    output += "| ID     | PRODUCT NAME         | PRICE    |\n";
+    output += "+--------+----------------------+----------+\n";
 
-        return output;
+    for (Product product : products) {
+        output += String.format("| %-6d | %-20s | $%7.2f |\n", product.getProductID(), product.getProductName(), product.getPrice());
     }
+
+    output += "+------------------------------------------+\n";
+    return output;
+}
+
+
 }
