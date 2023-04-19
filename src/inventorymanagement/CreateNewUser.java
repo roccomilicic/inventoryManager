@@ -1,5 +1,7 @@
 package inventorymanagement;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Scanner;
@@ -7,30 +9,55 @@ import java.util.Scanner;
 public class CreateNewUser {
 
     private String fileName;
-
     public CreateNewUser() {
 
-        this.fileName = "C:\\Users\\Gorilla Rig\\OneDrive - AUT University\\Documents\\NetBeansProjects\\InventoryManagementSystems\\resources\\UserDataBase.txt";
+        this.fileName = "src\\inventorymanagement\\UserDataBase.txt";
 
     }
 
     public void createUser() {
+        // Get user input for user details
         Scanner scan = new Scanner(System.in);
-
-        System.out.println("Enter Username: ");
+        System.out.println("\nEnter Username: ");
         String username = scan.nextLine();
-
         System.out.println("Enter Password: ");
         String password = scan.nextLine();
 
-        // Write username and password to the UserDataBase.txt file
-        try {
-            FileWriter writer = new FileWriter(fileName, true);
-            writer.write(username + "," + password + "\n");
-            writer.close();
-            System.out.println("User " + username + " created successfully!");
-        } catch (IOException e) {
-            System.out.println("Error writing to user database file.");
+        if(checkUserAvailability(username)) {
+            // Write username and password to the UserDataBase.txt file
+            try {
+                FileWriter writer = new FileWriter(fileName, true);
+                writer.write(username + "," + password + "\n");
+                writer.close();
+                System.out.println("> User '" + username + "' created successfully!\n");
+            } catch (IOException e) {
+                System.out.println("> Error writing to user database file.\n");
+            }
+        } else {
+            createUser();
         }
+    }
+
+    private boolean checkUserAvailability(String username) {
+        // Checks is username input is available
+        boolean userAvailable = true;
+
+        try {
+            BufferedReader reader = new BufferedReader(new FileReader(fileName));
+            String line = reader.readLine();
+            while (line != null) {
+                String[] userData = line.split(",");
+                if (userData[0].equals(username)) {
+                    userAvailable = false; // Username already exists
+                    System.out.println("> This user already exists. You must choose a different username.");
+                    break;
+                }
+                line = reader.readLine();
+            }
+            reader.close();
+        } catch (IOException e) {
+            System.out.println("> Error verifying user details.");
+        }
+        return userAvailable; // Username does not exist so it can be created
     }
 }
