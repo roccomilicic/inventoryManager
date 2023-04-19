@@ -1,4 +1,4 @@
-package InvenMan;
+package inventorymanagement;
 
 import java.io.FileWriter;
 import java.io.IOException;
