@@ -15,16 +15,14 @@ public class UserService {
     //private UserService userServ;
 
     public UserService() {
-        //Inventory inventory = = new Inventory();
-        this.productList = new ProductList(); // to call product methods
+        this.productList = new ProductList(); // to call productList methods
     }
 
     public void startProgram(UserService userServ, Inventory inventory) {
         /*Starts program by calling all the needed methods before user interacts
-        with the CUI. Then runs a loop on the mneu till user exits*/
+        with the CUI. Then runs a loop on the menu till user exits*/
 
         productList.generateProducts();
-
         while (true) { // loops menu till user quits the program
             userServ.userMenu(inventory); // starts off the program (would come after user login once implemented)
         }
@@ -40,13 +38,13 @@ public class UserService {
         System.out.printf("| %-2s. %-42s  |\n", "3", "Update inventory");
         System.out.printf("| %-2s. %-42s  |\n", "4", "Exit program");
         System.out.printf("+-------------------------------------------------+\n");
-        System.out.print("Enter your choice: ");
     }
 
     public void userMenu(Inventory inventory) {
         // Gets the user input for the update inventory menu
+
         printUserMenu();
-        System.out.println("SELECT: ");
+        System.out.println("Select an option: ");
         int selectedMenuOption = scan.nextInt();
 
         switch (selectedMenuOption) {
@@ -78,14 +76,13 @@ public class UserService {
         System.out.printf("| %-2s. %-43s |\n", "3", "Update quantity of a product");
         System.out.printf("| %-2s. %-43s |\n", "4", "Go back");
         System.out.printf("+-------------------------------------------------+\n");
-        System.out.print("Enter your choice: ");
     }
 
     public void updateInventoryMenu(Inventory inventory) {
         // Gets the user input for the update inventory menu 
         printUpdateInventory();
 
-        System.out.println("SELECT: ");
+        System.out.println("Select an option: ");
         int updateInventoryOption = scan.nextInt();
 
         switch (updateInventoryOption) {
@@ -100,7 +97,7 @@ public class UserService {
                 inventory.adjustQuantity(productList);
                 break;
             case 4:
-                System.out.println("> Back to menu");
+                System.out.println("> Back to menu.\n");
                 userMenu(inventory);
                 break;
             default:
@@ -115,10 +112,10 @@ public class UserService {
         logIn.logInInterface();
         
         Inventory inventory = new Inventory(); // calls default constructor to acces methods
-        //Product product = new Product(); // calls default constructor to acces methods
         UserService userServ = new UserService(); // calls default constructor to acces methods
 
         userServ.startProgram(userServ, inventory);
     }
 }
+
 
