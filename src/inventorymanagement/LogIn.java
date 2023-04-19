@@ -12,33 +12,30 @@ public class LogIn {
     private String fileName;
 
     public LogIn() {
-
-        this.fileName = "C:\\Users\\Gorilla Rig\\OneDrive - AUT University\\Documents\\NetBeansProjects\\InventoryManagementSystems\\resources\\UserDataBase.txt";
-
+        this.fileName = "src\\inventorymanagement\\UserDataBase.txt";
     }
 
     public void logInInterface() {
         Scanner scan = new Scanner(System.in);
 
-        System.out.println("1) Login\n2) Create new User");
+        System.out.println("1) Login\n2) Create new User\n3) Exit program");
 
         String loginOption = scan.nextLine();
 
         if (loginOption.equals("1")) {
 
-            System.out.println("Enter Username: ");
+            System.out.println("\nEnter Username: ");
 
             String username = scan.nextLine();
 
             System.out.println("Enter Password: ");
             String password = scan.nextLine();
 
-            // Check if username and password are valid
-            if (checkCredentials(username, password)) {
-                System.out.println("Login successful!");
+            if (checkCredentials(username, password)) { // Check if username and password are valid
+                System.out.println("> Login successful!\n");
                 // Do something else here, like open the main menu
             } else {
-                System.out.println("Incorrect username or password.");
+                System.out.println("> Incorrect username or password.\n");
                 logInInterface(); // Loop back to the beginning
             }
 
@@ -47,12 +44,13 @@ public class LogIn {
             CreateNewUser userCreation = new CreateNewUser();
             userCreation.createUser();
             logInInterface(); // Loop back to the beginning
-            System.out.println("Creating a new user...");
+        } else if (loginOption.equals("3")) {
+            System.exit(0);
+            System.out.println("> Exiting Inventory Manager...")
         } else {
-            System.out.println("Invalid option.");
-            logInInterface(); // Loop back to the beginning
+            System.out.println("> Invalid option.");
+            logInInterface(); // Loop back to the beginning of LogIn
         }
-
     }
 
     private boolean checkCredentials(String username, String password) {
@@ -69,9 +67,8 @@ public class LogIn {
             }
             reader.close();
         } catch (IOException e) {
-            System.out.println("Error reading user database file.");
+            System.out.println("> Error reading user database file.");
         }
         return false; // Username and/or password is invalid
     }
-
 }
