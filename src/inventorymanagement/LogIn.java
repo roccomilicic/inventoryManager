@@ -12,7 +12,7 @@ public class LogIn {
     private String fileName;
 
     public LogIn() {
-        this.fileName = "src\\inventorymanagement\\UserDataBase.txt";
+        this.fileName = "C:\\Users\\Gorilla Rig\\OneDrive - AUT University\\Documents\\NetBeansProjects\\InventoryManagementSystems\\resources\\UserDataBase.txt";
     }
 
     public void logInInterface() {
@@ -27,7 +27,7 @@ public class LogIn {
             System.out.println("\nEnter Username: ");
 
             String username = scan.nextLine();
-
+            this.userName = username;
             System.out.println("Enter Password: ");
             String password = scan.nextLine();
 
@@ -46,11 +46,15 @@ public class LogIn {
             logInInterface(); // Loop back to the beginning
         } else if (loginOption.equals("3")) {
             System.exit(0);
-            System.out.println("> Exiting Inventory Manager...")
+            System.out.println("> Exiting Inventory Manager...");
         } else {
             System.out.println("> Invalid option.");
             logInInterface(); // Loop back to the beginning of LogIn
         }
+    }
+    
+    public String getCurrentUser(){
+        return this.userName;
     }
 
     private boolean checkCredentials(String username, String password) {
