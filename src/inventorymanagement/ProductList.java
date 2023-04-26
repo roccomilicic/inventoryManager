@@ -28,6 +28,12 @@ public class ProductList {
         products.add(new Product(9, "Coconut", 4.50));
         products.add(new Product(10, "Pear", 0.75));
     }
+    
+    public void addToProductsArrayList(int prodID, String prodName, double prodPrice, int prodQuant){
+        
+        products.add(new Product(prodID, prodName, prodPrice, prodQuant));
+        
+    }
 
     public Product getProductById(int productId) {
         // To search for a product object with just the ID (to add to inventory)
