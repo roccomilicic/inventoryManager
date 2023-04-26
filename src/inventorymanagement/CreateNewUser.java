@@ -9,6 +9,7 @@ import java.util.Scanner;
 public class CreateNewUser {
 
     private String fileName;
+
     public CreateNewUser() {
 
         this.fileName = "src\\inventorymanagement\\UserDataBase.txt";
@@ -20,12 +21,17 @@ public class CreateNewUser {
         Scanner scan = new Scanner(System.in);
         System.out.println("\nEnter Username: ");
         String username = scan.nextLine();
-        System.out.println("Enter Password: ");
-        String password = scan.nextLine();
 
-        if(checkUserAvailability(username)) {
+        if (checkUserAvailability(username)) {
             // Write username and password to the UserDataBase.txt file
             try {
+                File newFolder = new File("UserProfiles/" + username);
+                if (!newFolder.exists()) {
+                    newFolder.mkdir();
+                }
+
+                System.out.println("Enter Password: ");
+                String password = scan.nextLine();
                 FileWriter writer = new FileWriter(fileName, true);
                 writer.write(username + "," + password + "\n");
                 writer.close();
@@ -60,4 +66,5 @@ public class CreateNewUser {
         }
         return userAvailable; // Username does not exist so it can be created
     }
+
 }
