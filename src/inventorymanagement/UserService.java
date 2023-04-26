@@ -34,9 +34,8 @@ public class UserService {
         System.out.printf("|                  INVENTORY MANAGER              |\n");
         System.out.printf("+-------------------------------------------------+\n");
         System.out.printf("| %-2s. %-42s  |\n", "1", "View inventory");
-        System.out.printf("| %-2s. %-42s  |\n", "2", "Print inventory to TXT file");
-        System.out.printf("| %-2s. %-42s  |\n", "3", "Update inventory");
-        System.out.printf("| %-2s. %-42s  |\n", "4", "Exit program");
+        System.out.printf("| %-2s. %-42s  |\n", "2", "Update inventory");
+        System.out.printf("| %-2s. %-42s  |\n", "3", "Exit program");
         System.out.printf("+-------------------------------------------------+\n");
     }
 
@@ -52,15 +51,13 @@ public class UserService {
                 System.out.println(inventory.toString());
                 break;
             case 2:
-                inventory.inventoryToTxt();
-                break;
-            case 3:
                 updateInventoryMenu(inventory);
                 break;
-            case 4:
+            case 3:
                 System.out.println("> Exiting Inventory Manager...");
                 System.exit(0);
                 break;
+
             default:
                 System.out.println("> Invalid choice. Please try again.");
         }
@@ -106,16 +103,17 @@ public class UserService {
     }
 
     public static void main(String[] args) {
-        
-        LogIn logIn = new LogIn();
-        
-        logIn.logInInterface();
-        
-        Inventory inventory = new Inventory(); // calls default constructor to acces methods
-        UserService userServ = new UserService(); // calls default constructor to acces methods
 
+        LogIn logIn = new LogIn();
+
+        logIn.logInInterface();
+        String currentUser = logIn.getCurrentUser();
+
+        Inventory inventory = new Inventory(currentUser); // calls default constructor to acces methods
+        //UserProfile currentUserProfile = new UserProfile(currentUser, inventory);
+
+        UserService userServ = new UserService(); // calls default constructor to acces methods
         userServ.startProgram(userServ, inventory);
     }
 }
-
 
