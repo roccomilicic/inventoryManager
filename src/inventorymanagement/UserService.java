@@ -5,115 +5,191 @@ package inventorymanagement;
  * @author Rocco + Beedrix
  */
 
+import java.io.BufferedReader;
+import java.util.HashMap;
 import java.util.Scanner;
+import java.io.File;
+import java.io.PrintWriter;
+import java.io.FileOutputStream;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 
-public class UserService {
+public class Inventory {
 
-    Scanner scan = new Scanner(System.in);
-    private ProductList productList;
-    //private Inventory inventory;
-    //private UserService userServ;
+    private String inventoryTxt;
+    private Scanner scan = new Scanner(System.in);
+    private Product product;
+    ProductList productList;
+    private int productQuantity;
+    private HashMap<Integer, Product> inventory;
+    private String currentUser; 
 
-    public UserService() {
-        this.productList = new ProductList(); // to call productList methods
+    public Inventory(String currentUser) { // default constructor
+        this.inventory = new HashMap<Integer, Product>();
+        this.product = new Product();
+        this.productList = new ProductList(); // to call product methods
+        this.currentUser = currentUser;
+            
+        setProductListArray();
     }
 
-    public void startProgram(UserService userServ, Inventory inventory) {
-        /*Starts program by calling all the needed methods before user interacts
-        with the CUI. Then runs a loop on the menu till user exits*/
+    public void setProductListArray() {
 
-        productList.generateProducts();
-        while (true) { // loops menu till user quits the program
-            userServ.userMenu(inventory); // starts off the program (would come after user login once implemented)
+        File file = new File("UserProfiles/" + this.currentUser + '/' + this.currentUser + "Inventory.txt");
+
+        if (file.exists()) {
+            try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+
+                if (file.length() != 0) {
+                    String line;
+
+                    while ((line = br.readLine()) != null) {
+                        // skip empty or whitespace-only lines
+                        if (line.trim().isEmpty()) {
+                            continue;
+                        }
+                        String[] parts = line.split(",");
+
+                        // parse values
+                        int id = Integer.parseInt(parts[0]);
+                        String name = parts[1];
+                        double price = Double.parseDouble(parts[2]);
+                        int quantity = Integer.parseInt(parts[3]);
+
+                        Product setProduct = new Product(id, name, price, quantity);
+                        this.inventory.put(id, setProduct);
+                    }
+                } else {
+                    this.inventory = new HashMap<Integer, Product>();
+                }
+
+            } catch (IOException e) {
+                System.err.println(e.getMessage());
+            }
+        } else{
+            inventoryToTxt();
+            System.out.println("> New User text file created.");
         }
     }
 
-    public static void printUserMenu() {
-        // Prints the user menu
-        System.out.printf("+-------------------------------------------------+\n");
-        System.out.printf("|                  INVENTORY MANAGER              |\n");
-        System.out.printf("+-------------------------------------------------+\n");
-        System.out.printf("| %-2s. %-42s  |\n", "1", "View inventory");
-        System.out.printf("| %-2s. %-42s  |\n", "2", "Update inventory");
-        System.out.printf("| %-2s. %-42s  |\n", "3", "Exit program");
-        System.out.printf("+-------------------------------------------------+\n");
+    public void setCurrentUser(String currentUser) {
+        this.currentUser = currentUser;
     }
 
-    public void userMenu(Inventory inventory) {
-        // Gets the user input for the update inventory menu
+    public HashMap<Integer, Product> getInventory() {
+        return this.inventory;
+    }
 
-        printUserMenu();
-        System.out.println("Select an option: ");
-        int selectedMenuOption = scan.nextInt();
+    public void addProduct(ProductList productList) {
+        // Adds the users choice of product to the current inventory
 
-        switch (selectedMenuOption) {
-            case 1:
-                System.out.println(inventory.toString());
-                break;
-            case 2:
-                updateInventoryMenu(inventory);
-                break;
-            case 3:
-                System.out.println("> Exiting Inventory Manager...");
-                System.exit(0);
-                break;
+        System.out.println("Add an item based on ID: ");
+        int productToAdd = scan.nextInt();
+        product = productList.getProductById(productToAdd); // selects product to add based on ID from user
 
-            default:
-                System.out.println("> Invalid choice. Please try again.");
+        if (product != null) { // if != empty product
+            System.out.println("How many would you like to add: ");
+            int quantityToAdd = scan.nextInt();
+            product.addQuantity(quantityToAdd);
+
+            inventory.put(product.getProductID(), product); // add product to inventory hashmap
+            System.out.println("> Added " + product.getProductName() + " to inventory");
+            inventoryToTxt();
+
+        } else {
+            System.out.println("> Item not found!");
         }
     }
 
-    public void printUpdateInventory() {
-        // Prints the update inventory menu
-        System.out.printf("+-------------------------------------------------+\n");
-        System.out.printf("|                  UPDATE INVENTORY               |\n");
-        System.out.printf("+-------------------------------------------------+\n");
-        System.out.printf("| %-2s. %-43s |\n", "1", "Add product to inventory");
-        System.out.printf("| %-2s. %-43s |\n", "2", "Remove product from inventory");
-        System.out.printf("| %-2s. %-43s |\n", "3", "Update quantity of a product");
-        System.out.printf("| %-2s. %-43s |\n", "4", "Go back");
-        System.out.printf("+-------------------------------------------------+\n");
-    }
+    public void removeProduct(ProductList productList) {
+        // Removes the users choice of product to the current inventory
+        if (inventory.isEmpty()) { // if no items inventory
+            System.out.println("> You need at least 1 item in your inventory in order to remove an item.\n");
+        } else { // if items in inventory
+            System.out.println(toString());
+            System.out.println("\nRemove an item based on ID: ");
+            int productToRemove = scan.nextInt();
+            product = productList.getProductById(productToRemove); // selects product to add based on ID from user
 
-    public void updateInventoryMenu(Inventory inventory) {
-        // Gets the user input for the update inventory menu 
-        printUpdateInventory();
-
-        System.out.println("Select an option: ");
-        int updateInventoryOption = scan.nextInt();
-
-        switch (updateInventoryOption) {
-            case 1:
-                System.out.println(productList.toString()); // displays products available to add to inventory
-                inventory.addProduct(productList);
-                break;
-            case 2:
-                inventory.removeProduct(productList);
-                break;
-            case 3:
-                inventory.adjustQuantity(productList);
-                break;
-            case 4:
-                System.out.println("> Back to menu.\n");
-                userMenu(inventory);
-                break;
-            default:
-                System.out.println("> Invalid choice. Please try again.");
+            if (product != null && inventory.containsKey(productToRemove)) { // if != empty product and if product is in inventory
+                inventory.remove(productToRemove); // remove product from inventory hashmap
+                product.setQuantity(0); // reset quanity incase added back in the future
+                System.out.println("> Removed " + product.getProductName() + " from inventory");
+                inventoryToTxt();
+            } else {
+                System.out.println("> Item not found!");
+            }
         }
     }
 
-    public static void main(String[] args) {
+    public void adjustQuantity(ProductList productList) {
+        // Updates the quantity of chosen product in the current inventory     
+        if (inventory.isEmpty()) { // if no items inventory
+            System.out.println("> You need at least 1 item in your inventory in order to adjust the quantity of item.\n");
+        } else { // if items in inventory
+            System.out.println(toString());
+            System.out.println("\nSelect an item based on ID: ");
+            int productToUpdate = scan.nextInt();
+            product = productList.getProductById(productToUpdate); // selects product to add based on ID from user
 
-        LogIn logIn = new LogIn();
+            if (product != null && inventory.containsKey(productToUpdate)) { // if != empty product and if product is in inventory
+                System.out.println("Enter the quantity of " + product.getProductName().toUpperCase());
+                int newQuantity = scan.nextInt();
+                product.setQuantity(newQuantity); // overwrite the quanity based on user input
+                System.out.println("> Updated " + product.getProductName() + " to a quantity of " + product.getQuantity());
+                inventoryToTxt();
+            } else {
+                System.out.println("> Item not found!");
+            }
+        }
+    }
 
-        logIn.logInInterface();
-        String currentUser = logIn.getCurrentUser();
+    public void inventoryToTxt() {
+    try {
 
-        Inventory inventory = new Inventory(currentUser); // calls default constructor to acces methods
-        //UserProfile currentUserProfile = new UserProfile(currentUser, inventory);
+            // makes sure user actually entered a file name
+            File newUserInven = new File("UserProfiles/" + this.currentUser + "/" + this.currentUser + "Inventory.txt");
+            PrintWriter pw = new PrintWriter(new FileOutputStream(newUserInven));
 
-        UserService userServ = new UserService(); // calls default constructor to acces methods
-        userServ.startProgram(userServ, inventory);
+            String output = "";
+            for (HashMap.Entry<Integer, Product> entry : inventory.entrySet()) {
+                Product product = entry.getValue();
+                output += String.format(product.getProductID() + "," + product.getProductName() + ","
+                        + product.getPrice() + "," + product.getQuantity() + "\n");
+            }
+
+            pw.println(output); // Appends the inventory toString to the txt file
+            System.out.println("> Inventory added to file '" + newUserInven + "'");
+            pw.close();
+
+        } catch (FileNotFoundException e) {
+            System.out.println(e.getMessage());
+        }
+        //}
+    }
+
+    public String getInventoryTxt() {
+        return this.inventoryTxt;
+    }
+
+    @Override
+    public String toString() {
+        String output = "";
+        output = "+-------------------------------------------------------------+\n";
+        output += "|    YOUR INVENTORY.                                          |\n";
+        output += "|-------------------------------------------------------------|\n";
+        output += "| ID     | Name              | Price         | Quantity       |\n";
+        output += "+-------------------------------------------------------------+\n";
+
+        for (HashMap.Entry<Integer, Product> entry : inventory.entrySet()) {
+            Product product = entry.getValue();
+            output += String.format("| %-3d    | %-10s        | $%-6.2f       | %-6d         |\n",
+                    product.getProductID(), product.getProductName(), product.getPrice(), product.getQuantity());
+        }
+
+        output += "+-------------------------------------------------------------+\n";
+
+        return output;
     }
 }
-
