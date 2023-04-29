@@ -19,22 +19,22 @@ public class Inventory {
 
     private String inventoryTxt;
     private Scanner scan = new Scanner(System.in);
-    private Product product;
-    ProductList productList;
-    private int productQuantity;
-    private HashMap<Integer, Product> inventory;
-    private String currentUser; 
+    private HashMap<Integer, CarProduct> inventory2;
+    private String currentUser;
+    private CarProduct product;
 
     public Inventory(String currentUser) { // default constructor
-        this.inventory = new HashMap<Integer, Product>();
-        this.product = new Product();
-        this.productList = new ProductList(); // to call product methods
+
+        this.inventory2 = new HashMap<Integer, CarProduct>();
         this.currentUser = currentUser;
-            
-        setProductListArray();
+        setInventoryHashMap();
     }
 
-    public void setProductListArray() {
+    public void setCurrentUser(String currentUser) {
+        this.currentUser = currentUser;
+    }
+
+    public void setInventoryHashMap() {
 
         File file = new File("UserProfiles/" + this.currentUser + '/' + this.currentUser + "Inventory.txt");
 
@@ -53,48 +53,98 @@ public class Inventory {
 
                         // parse values
                         int id = Integer.parseInt(parts[0]);
-                        String name = parts[1];
-                        double price = Double.parseDouble(parts[2]);
-                        int quantity = Integer.parseInt(parts[3]);
+                        String model = parts[1];
+                        String brand = parts[2];
+                        String type = parts[3];
+                        double price = Double.parseDouble(parts[4]);
+                        int quantity = Integer.parseInt(parts[5]);
 
-                        Product setProduct = new Product(id, name, price, quantity);
-                        this.inventory.put(id, setProduct);
+                        CarProduct setProduct = new CarTire(id, model, brand, type, price, quantity);
+                        this.inventory2.put(id, setProduct);
                     }
                 } else {
-                    this.inventory = new HashMap<Integer, Product>();
+                    this.inventory2 = new HashMap<Integer, CarProduct>();
                 }
 
             } catch (IOException e) {
                 System.err.println(e.getMessage());
             }
-        } else{
+        } else {
             inventoryToTxt();
             System.out.println("> New User text file created.");
         }
     }
 
-    public void setCurrentUser(String currentUser) {
-        this.currentUser = currentUser;
+
+    public boolean hasProduct(CarProduct prod) {
+        boolean hasProd = false;
+        for (HashMap.Entry<Integer, CarProduct> entry : inventory2.entrySet()) {
+            CarProduct product = entry.getValue();
+            if (product.productID == prod.productID) {
+                hasProd = true;
+            }
+
+        }
+
+        return hasProd;
     }
 
-    public HashMap<Integer, Product> getInventory() {
-        return this.inventory;
-    }
+    public void addProduct() {
 
-    public void addProduct(ProductList productList) {
-        // Adds the users choice of product to the current inventory
 
-        System.out.println("Add an item based on ID: ");
+        System.out.println("Select the product type you wish to add: ");
         int productToAdd = scan.nextInt();
-        product = productList.getProductById(productToAdd); // selects product to add based on ID from user
 
-        if (product != null) { // if != empty product
-            System.out.println("How many would you like to add: ");
-            int quantityToAdd = scan.nextInt();
-            product.addQuantity(quantityToAdd);
+        addProduct(productToAdd);
+    }
 
-            inventory.put(product.getProductID(), product); // add product to inventory hashmap
-            System.out.println("> Added " + product.getProductName() + " to inventory");
+    public void addProduct(int prodOption) {
+
+        String x = "";
+
+        switch (prodOption) {
+            case 1:
+                this.product = new CarTire();
+                x = "Tire";
+                break;
+            case 2:
+                this.product = new CarSideMirror();
+                x = "Side Mirror";
+                break;
+            case 3:
+                this.product = new CarEngine();
+                x = "Engine";
+                break;
+            case 4:
+                this.product = new CarHeadLights();
+                x = "Head Lights";
+                break;
+
+            default:
+                System.out.println("> Invalid choice. Please try again.");
+
+        }
+
+        System.out.println(product.toString());
+        System.out.println("Select the " + x + " you want to add to inventory based on ID: ");
+        int productToAdd = scan.nextInt();
+
+        CarProduct tempProd = product.getProductByID(productToAdd);
+
+        if (tempProd != null) {
+            if (hasProduct(tempProd)) {
+                System.out.println("How many would you like to add: ");
+                int quantityToAdd = scan.nextInt();
+                inventory2.get(productToAdd).addQuantity(quantityToAdd);
+            } else {
+                System.out.println("How many would you like to add: ");
+                int quantityToAdd = scan.nextInt();
+                tempProd.addQuantity(quantityToAdd);
+
+                inventory2.put(tempProd.productID, tempProd); 
+                System.out.println("> Added " + tempProd.productID + " to inventory");
+
+            }
             inventoryToTxt();
 
         } else {
@@ -102,20 +152,19 @@ public class Inventory {
         }
     }
 
-    public void removeProduct(ProductList productList) {
-        // Removes the users choice of product to the current inventory
-        if (inventory.isEmpty()) { // if no items inventory
+    public void removeProduct() {
+
+        if (inventory2.isEmpty()) { 
             System.out.println("> You need at least 1 item in your inventory in order to remove an item.\n");
-        } else { // if items in inventory
+        } else { 
             System.out.println(toString());
             System.out.println("\nRemove an item based on ID: ");
             int productToRemove = scan.nextInt();
-            product = productList.getProductById(productToRemove); // selects product to add based on ID from user
-
-            if (product != null && inventory.containsKey(productToRemove)) { // if != empty product and if product is in inventory
-                inventory.remove(productToRemove); // remove product from inventory hashmap
-                product.setQuantity(0); // reset quanity incase added back in the future
-                System.out.println("> Removed " + product.getProductName() + " from inventory");
+            CarProduct tempProd = inventory2.get(productToRemove);
+            
+            if (tempProd != null) { 
+                inventory2.remove(productToRemove); 
+                System.out.println("> Removed " + tempProd.productModel + " " + tempProd.productBrand + " from inventory");
                 inventoryToTxt();
             } else {
                 System.out.println("> Item not found!");
@@ -123,21 +172,22 @@ public class Inventory {
         }
     }
 
-    public void adjustQuantity(ProductList productList) {
-        // Updates the quantity of chosen product in the current inventory     
-        if (inventory.isEmpty()) { // if no items inventory
+    public void adjustQuantity() {
+ 
+        if (inventory2.isEmpty()) { 
             System.out.println("> You need at least 1 item in your inventory in order to adjust the quantity of item.\n");
-        } else { // if items in inventory
+        } else {
             System.out.println(toString());
             System.out.println("\nSelect an item based on ID: ");
             int productToUpdate = scan.nextInt();
-            product = productList.getProductById(productToUpdate); // selects product to add based on ID from user
-
-            if (product != null && inventory.containsKey(productToUpdate)) { // if != empty product and if product is in inventory
-                System.out.println("Enter the quantity of " + product.getProductName().toUpperCase());
+            
+            CarProduct tempProd = inventory2.get(productToUpdate);
+            
+            if (tempProd != null) { 
+                System.out.println("Enter the quantity of " + tempProd.productModel + " " + tempProd.productBrand);
                 int newQuantity = scan.nextInt();
-                product.setQuantity(newQuantity); // overwrite the quanity based on user input
-                System.out.println("> Updated " + product.getProductName() + " to a quantity of " + product.getQuantity());
+                inventory2.get(productToUpdate).quantity = newQuantity; // overwrite the quanity based on user input
+                System.out.println("> Updated " + tempProd.productModel + " " + tempProd.productBrand + " to a quantity of " + inventory2.get(productToUpdate).quantity);
                 inventoryToTxt();
             } else {
                 System.out.println("> Item not found!");
@@ -146,27 +196,27 @@ public class Inventory {
     }
 
     public void inventoryToTxt() {
-    try {
+        try {
 
             // makes sure user actually entered a file name
             File newUserInven = new File("UserProfiles/" + this.currentUser + "/" + this.currentUser + "Inventory.txt");
             PrintWriter pw = new PrintWriter(new FileOutputStream(newUserInven));
 
             String output = "";
-            for (HashMap.Entry<Integer, Product> entry : inventory.entrySet()) {
-                Product product = entry.getValue();
-                output += String.format(product.getProductID() + "," + product.getProductName() + ","
-                        + product.getPrice() + "," + product.getQuantity() + "\n");
+            for (HashMap.Entry<Integer, CarProduct> entry : inventory2.entrySet()) {
+                CarProduct product = entry.getValue();
+                output += String.format(product.productID + "," + product.productModel + ","
+                        + product.productBrand + "," + product.productType + "," + product.price + "," + product.quantity + "\n");
             }
 
-            pw.println(output); // Appends the inventory toString to the txt file
+            pw.println(output);
             System.out.println("> Inventory added to file '" + newUserInven + "'");
             pw.close();
 
         } catch (FileNotFoundException e) {
             System.out.println(e.getMessage());
         }
-        //}
+
     }
 
     public String getInventoryTxt() {
@@ -175,21 +225,20 @@ public class Inventory {
 
     @Override
     public String toString() {
-        String output = "";
-        output = "+-------------------------------------------------------------+\n";
-        output += "|    YOUR INVENTORY.                                          |\n";
-        output += "|-------------------------------------------------------------|\n";
-        output += "| ID     | Name              | Price         | Quantity       |\n";
-        output += "+-------------------------------------------------------------+\n";
+        String output = "+----------------------------------------------------------------------------------+\n";
+        output += "|                                     INVENTORY:                                   |\n";
+        output += "+--------+----------------+---------------+------------+--------------+------------+\n";
+        output += "| ID     | PRODUCT NAME   |     BRAND     |    PRICE   |      TYPE    |  QUANTITY  |\n";
+        output += "+--------+----------------+---------------+------------+--------------+------------+\n";
 
-        for (HashMap.Entry<Integer, Product> entry : inventory.entrySet()) {
-            Product product = entry.getValue();
-            output += String.format("| %-3d    | %-10s        | $%-6.2f       | %-6d         |\n",
-                    product.getProductID(), product.getProductName(), product.getPrice(), product.getQuantity());
+        for (HashMap.Entry<Integer, CarProduct> entry : inventory2.entrySet()) {
+            CarProduct product = entry.getValue();
+            output += String.format("| %-6d | %-14s | %-13s | $%9.2f | %-12s | %-10s |\n",
+                    product.productID, product.productModel, product.productBrand, product.price, product.productType, product.quantity);
         }
 
-        output += "+-------------------------------------------------------------+\n";
-
+        output += "+----------------------------------------------------------------------------------+\n";
         return output;
     }
+
 }
