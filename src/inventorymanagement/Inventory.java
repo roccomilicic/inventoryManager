@@ -38,34 +38,39 @@ public class Inventory {
 
         File file = new File("UserProfiles/" + this.currentUser + '/' + this.currentUser + "Inventory.txt");
 
-        try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+        if (file.exists()) {
+            try (BufferedReader br = new BufferedReader(new FileReader(file))) {
 
-            if (file.length() != 0) {
-                String line;
+                if (file.length() != 0) {
+                    String line;
 
-                while ((line = br.readLine()) != null) {
-                    // skip empty or whitespace-only lines
-                    if (line.trim().isEmpty()) {
-                        continue;
+                    while ((line = br.readLine()) != null) {
+                        // skip empty or whitespace-only lines
+                        if (line.trim().isEmpty()) {
+                            continue;
+                        }
+                        String[] parts = line.split(",");
+
+                        // parse values
+                        int id = Integer.parseInt(parts[0]);
+                        String name = parts[1];
+                        double price = Double.parseDouble(parts[2]);
+                        int quantity = Integer.parseInt(parts[3]);
+
+                        Product setProduct = new Product(id, name, price, quantity);
+                        this.inventory.put(id, setProduct);
                     }
-                    String[] parts = line.split(",");
-
-                    // parse values
-                    int id = Integer.parseInt(parts[0]);
-                    String name = parts[1];
-                    double price = Double.parseDouble(parts[2]);
-                    int quantity = Integer.parseInt(parts[3]);
-
-                    Product setProduct = new Product(id, name, price, quantity);
-                    this.inventory.put(id, setProduct);
+                } else {
+                    this.inventory = new HashMap<Integer, Product>();
                 }
-            } else {
-                this.inventory = new HashMap<Integer, Product>();
-            }
 
-        } catch (IOException e) {
-            System.err.println(e.getMessage());
+            } catch (IOException e) {
+                System.err.println(e.getMessage());
+            }
+        }else{
+            System.out.println("> New User text file created.");
         }
+
     }
 
     public void setCurrentUser(String currentUser) {
@@ -87,7 +92,7 @@ public class Inventory {
             inventory.put(product.getProductID(), product); // add product to inventory hashmap
             System.out.println("> Added " + product.getProductName() + " to inventory");
             inventoryToTxt();
-            
+
         } else {
             System.out.println("> Item not found!");
         }
@@ -195,4 +200,5 @@ public class Inventory {
         return output;
     }
 }
+
 
