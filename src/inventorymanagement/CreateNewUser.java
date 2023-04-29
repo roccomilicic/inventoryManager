@@ -12,7 +12,7 @@ public class CreateNewUser {
     private String fileName;
 
     public CreateNewUser() {
-        this.fileName = "src\\inventorymanagement\\UserDataBase.txt";
+        this.fileName = "resources/UserDataBase.txt";
     }
 
     public void createUser() {
