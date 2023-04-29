@@ -23,14 +23,14 @@ public class Inventory {
     ProductList productList;
     private int productQuantity;
     private HashMap<Integer, Product> inventory;
-    private String currentUser;
+    private String currentUser; 
 
     public Inventory(String currentUser) { // default constructor
         this.inventory = new HashMap<Integer, Product>();
         this.product = new Product();
         this.productList = new ProductList(); // to call product methods
         this.currentUser = currentUser;
-
+            
         setProductListArray();
     }
 
@@ -67,15 +67,18 @@ public class Inventory {
             } catch (IOException e) {
                 System.err.println(e.getMessage());
             }
-        }else{
+        } else{
             inventoryToTxt();
             System.out.println("> New User text file created.");
         }
-
     }
 
     public void setCurrentUser(String currentUser) {
         this.currentUser = currentUser;
+    }
+
+    public HashMap<Integer, Product> getInventory() {
+        return this.inventory;
     }
 
     public void addProduct(ProductList productList) {
@@ -143,12 +146,7 @@ public class Inventory {
     }
 
     public void inventoryToTxt() {
-        // Gets the current inventory and writes to a newly made txt file  
-        //if (inventory.isEmpty()) {
-        // System.out.println("> You need at least 1 item in your inventory in order to save it as a txt file.\n");
-        //} else {
-
-        try {
+    try {
 
             // makes sure user actually entered a file name
             File newUserInven = new File("UserProfiles/" + this.currentUser + "/" + this.currentUser + "Inventory.txt");
@@ -177,14 +175,9 @@ public class Inventory {
 
     @Override
     public String toString() {
-
         String output = "";
-
-        //if (inventory.isEmpty()) {
-        //     output = "> You currently have no items in your inventory.\n";
-        // } else {
-        output += "+-------------------------------------------------------------+\n";
-        output += "|                        INVENTORY:                           |\n";
+        output = "+-------------------------------------------------------------+\n";
+        output += "|    YOUR INVENTORY.                                          |\n";
         output += "|-------------------------------------------------------------|\n";
         output += "| ID     | Name              | Price         | Quantity       |\n";
         output += "+-------------------------------------------------------------+\n";
@@ -196,10 +189,7 @@ public class Inventory {
         }
 
         output += "+-------------------------------------------------------------+\n";
-        //}
 
         return output;
     }
 }
-
-
