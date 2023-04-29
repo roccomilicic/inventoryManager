@@ -12,9 +12,7 @@ public class CreateNewUser {
     private String fileName;
 
     public CreateNewUser() {
-
         this.fileName = "src\\inventorymanagement\\UserDataBase.txt";
-
     }
 
     public void createUser() {
@@ -26,13 +24,11 @@ public class CreateNewUser {
         if (checkUserAvailability(username)) {
             // Write username and password to the UserDataBase.txt file
             try {
-                File newFolder = new File("UserProfiles/" + username);
-                if (!newFolder.exists()) {
-                    newFolder.mkdir();
-                }
+                createUserFolders(username);
 
                 System.out.println("Enter Password: ");
                 String password = scan.nextLine();
+
                 FileWriter writer = new FileWriter(fileName, true);
                 writer.write(username + "," + password + "\n");
                 writer.close();
@@ -67,5 +63,13 @@ public class CreateNewUser {
         }
         return userAvailable; // Username does not exist so it can be created
     }
-
+    
+    public void createUserFolders(String username) {
+        // Create user inventory folder in UserProfile
+        File userFolder = new File("UserProfiles/" + username);
+        userFolder.mkdir();
+        // Create users order folder in Orders
+        File orderFolder = new File("UserProfiles/" + username + "/Orders/");
+        orderFolder.mkdir();
+    }
 }
