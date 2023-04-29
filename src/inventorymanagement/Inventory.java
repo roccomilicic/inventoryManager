@@ -68,6 +68,7 @@ public class Inventory {
                 System.err.println(e.getMessage());
             }
         }else{
+            inventoryToTxt();
             System.out.println("> New User text file created.");
         }
 
