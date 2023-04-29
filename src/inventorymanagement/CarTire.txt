@@ -1,0 +1,8 @@
+Product ID,Model,Brand,Type,Price
+22,T1000,Michelin,Summer,$100
+23,T1001,Goodyear,All Season,$120
+24,T1002,Bridgestone,Performance,$150
+25,T1003,Pirelli,Winter,$110
+26,T1004,Continental,Touring,$90
+27,T1005,Hankook,Summer,$95
+28,T1006,Firestone,All Season,$130

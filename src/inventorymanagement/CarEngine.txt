@@ -1,0 +1,8 @@
+Product ID,Model,Brand,Type,Price
+1,E1000,Ford,Gasoline,$5000
+2,E1001,Chevrolet,Diesel,$6000
+3,E1002,Toyota,Gasoline,$4000
+4,E1003,Honda,Hybrid,$7000
+5,E1004,BMW,Gasoline,$8000
+6,E1005,Audi,Electric,$12000
+7,E1006,Mercedes-Benz,Gasoline,$10000

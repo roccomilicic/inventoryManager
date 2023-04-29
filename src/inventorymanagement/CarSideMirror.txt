@@ -1,0 +1,8 @@
+Product ID,Model,Brand,Type,Price
+15,SM100,XYZ,Side Mirror,$150
+16,SM101,ABC,Side Mirror,$75
+17,SM102,XYZ,Side Mirror,$120
+18,SM103,DEF,Side Mirror,$90
+19,SM104,ABC,Side Mirror,$80
+20,SM105,DEF,Side Mirror,$110
+21,SM106,XYZ,Side Mirror,$100

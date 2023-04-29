@@ -1,0 +1,8 @@
+Product ID,Model,Brand,Type,Price
+8,HDL1001,Philips,Halogen,$50
+9,HDL1002,Sylvania,LED,$70
+10,HDL1003,GE,Halogen,$60
+11,HDL1004,Osram,Xenon,$100
+12,HDL1005,Kensun,HID,$80
+13,HDL1006,Hella,LED,$90
+14,HDL1007,Morimoto,LED,$120
