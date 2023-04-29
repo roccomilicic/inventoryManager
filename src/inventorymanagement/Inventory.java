@@ -5,12 +5,15 @@ package inventorymanagement;
  * @author Rocco + Beedrix
  */
 
+import java.io.BufferedReader;
 import java.util.HashMap;
 import java.util.Scanner;
-import java.io.File;  
-import java.io.PrintWriter;  
+import java.io.File;
+import java.io.PrintWriter;
 import java.io.FileOutputStream;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 
 public class Inventory {
 
