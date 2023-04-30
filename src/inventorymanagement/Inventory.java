@@ -14,6 +14,7 @@ import java.io.FileOutputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.InputMismatchException;
 
 public class Inventory {
 
@@ -26,7 +27,7 @@ public class Inventory {
     public Inventory(String currentUser) { // default constructor
         this.inventory2 = new HashMap<Integer, CarProduct>();
         this.currentUser = currentUser;
-        
+
         setInventoryHashMap();
     }
 
@@ -79,7 +80,6 @@ public class Inventory {
         }
     }
 
-
     public boolean hasProduct(CarProduct prod) {
         boolean hasProd = false;
         for (HashMap.Entry<Integer, CarProduct> entry : inventory2.entrySet()) {
@@ -95,9 +95,23 @@ public class Inventory {
 
     public void addProduct() {
 
+        boolean userValid = false;
+        int productToAdd = 0;
+        while (!userValid) {
 
-        System.out.println("Select the product type you wish to add: ");
-        int productToAdd = scan.nextInt();
+            System.out.println("Select the product type you wish to add: ");
+            try {
+                productToAdd = scan.nextInt();
+
+            } catch (InputMismatchException e) {
+                // Handle non-integer input
+                System.out.println("> Invalid input. Please enter a number.");
+                scan.nextLine(); //consume the invalid input
+                continue;
+            }
+            userValid = true;
+
+        }
 
         addProduct(productToAdd);
     }
@@ -123,9 +137,12 @@ public class Inventory {
                 this.product = new CarHeadLights();
                 x = "Head Lights";
                 break;
+            case 5:
+                return;
 
             default:
                 System.out.println("> Invalid choice. Please try again.");
+                addProduct();
 
         }
 
@@ -135,7 +152,7 @@ public class Inventory {
 
         CarProduct tempProd = product.getProductByID(productToAdd);
 
-        if (tempProd != null) {
+        if (tempProd != null && tempProd.productModel != null) {
             if (hasProduct(tempProd)) {
                 System.out.println("How many would you like to add: ");
                 int quantityToAdd = scan.nextInt();
@@ -145,7 +162,7 @@ public class Inventory {
                 int quantityToAdd = scan.nextInt();
                 tempProd.addQuantity(quantityToAdd);
 
-                inventory2.put(tempProd.productID, tempProd); 
+                inventory2.put(tempProd.productID, tempProd);
                 System.out.println("> Added " + tempProd.productID + " to inventory");
 
             }
@@ -158,16 +175,16 @@ public class Inventory {
 
     public void removeProduct() {
 
-        if (inventory2.isEmpty()) { 
+        if (inventory2.isEmpty()) {
             System.out.println("> You need at least 1 item in your inventory in order to remove an item.\n");
-        } else { 
+        } else {
             System.out.println(toString());
             System.out.println("\nRemove an item based on ID: ");
             int productToRemove = scan.nextInt();
             CarProduct tempProd = inventory2.get(productToRemove);
-            
-            if (tempProd != null) { 
-                inventory2.remove(productToRemove); 
+
+            if (tempProd != null) {
+                inventory2.remove(productToRemove);
                 System.out.println("> Removed " + tempProd.productModel + " " + tempProd.productBrand + " from inventory");
                 inventoryToTxt();
             } else {
@@ -177,17 +194,17 @@ public class Inventory {
     }
 
     public void adjustQuantity() {
- 
-        if (inventory2.isEmpty()) { 
+
+        if (inventory2.isEmpty()) {
             System.out.println("> You need at least 1 item in your inventory in order to adjust the quantity of item.\n");
         } else {
             System.out.println(toString());
             System.out.println("\nSelect an item based on ID: ");
             int productToUpdate = scan.nextInt();
-            
+
             CarProduct tempProd = inventory2.get(productToUpdate);
-            
-            if (tempProd != null) { 
+
+            if (tempProd != null) {
                 System.out.println("Enter the quantity of " + tempProd.productModel + " " + tempProd.productBrand);
                 int newQuantity = scan.nextInt();
                 inventory2.get(productToUpdate).quantity = newQuantity; // overwrite the quanity based on user input
