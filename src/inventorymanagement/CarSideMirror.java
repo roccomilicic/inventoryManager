@@ -1,4 +1,4 @@
-package InvenMan;
+package inventorymanagement;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -58,7 +58,7 @@ public class CarSideMirror extends CarProduct {
     @Override
     public String toString() {
         String output = "+-----------------------------------------------------------------+\n";
-        output += "|                      CAR SIDE MIRROR LIST:                      |\n";
+        output += "|    CAR SIDE MIRROR LIST.                                        |\n";
         output += "+--------+----------------+--------------+---------+--------------+\n";
         output += "| ID     | PRODUCT NAME   |    BRAND     |  PRICE  |      TYPE    |\n";
         output += "+--------+----------------+--------------+---------+--------------+\n";
@@ -88,7 +88,5 @@ public class CarSideMirror extends CarProduct {
 
         return selectedSideMirror;
     }
-    
-
 }
 
