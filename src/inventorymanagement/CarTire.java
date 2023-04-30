@@ -1,4 +1,4 @@
-package InvenMan;
+package inventorymanagement;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -61,7 +61,7 @@ public class CarTire extends CarProduct {
     @Override
     public String toString() {
         String output = "+-----------------------------------------------------------------+\n";
-        output += "|                          CAR TIRE LIST:                         |\n";
+        output += "|    CAR TIRE LIST.                                               |\n";
         output += "+--------+----------------+--------------+---------+--------------+\n";
         output += "| ID     | PRODUCT NAME   |    BRAND     |  PRICE  |      TYPE    |\n";
         output += "+--------+----------------+--------------+---------+--------------+\n";
@@ -91,5 +91,4 @@ public class CarTire extends CarProduct {
         
         return selectedTire;
     }
-  
 }
