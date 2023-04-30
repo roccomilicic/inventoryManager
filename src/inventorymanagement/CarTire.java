@@ -4,12 +4,13 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
+//CarTire class is a subclass of CarProduct and is primarily responsible for reading from the CarTiretxt file 
+//to store the contents of that text file in a HashMap array to be used for toString method and other general methods
 public class CarTire extends CarProduct {
 
-
+    //two constructors were created one for when no quantity is required usually when printing to menus 
+    //and the other constructor requires quantity when a user is adding to inventory
     public CarTire(int productId, String model, String brand, String type, double price) {
         this.productID = productId;
         this.productModel = model;
@@ -31,26 +32,31 @@ public class CarTire extends CarProduct {
 
     public CarTire() {
         try {
+            //calls the setTireArrayList() method to initialize 
+            //the prodList with all tire products stored on file.
+            
             prodList = setTireArrayList();
         } catch (IOException ex) {
             System.out.println(ex.getMessage());
         }
     }
 
+    //setTireArrayList is a static method that initializes the prodList ArrayList which is used in the toString 
+    //method to print out the menus options for the Car Tire products
     public static ArrayList<CarProduct> setTireArrayList() throws IOException {
         ArrayList<CarProduct> tireList = new ArrayList<>();
         BufferedReader reader = new BufferedReader(new FileReader("CarProducts/CarTire.txt"));
         String line;
         while ((line = reader.readLine()) != null) {
             String[] fields = line.split(",");
-            if (fields[0].equals("Product ID")) { // skip the header row
+            if (fields[0].equals("Product ID")) { //skips the header row in the CarTire txt file
                 continue;
             }
             int productId = Integer.parseInt(fields[0]);
             String model = fields[1];
             String brand = fields[2];
             String type = fields[3];
-            double price = Double.parseDouble(fields[4].substring(1)); // remove the $ symbol
+            double price = Double.parseDouble(fields[4].substring(1)); //remove the $ symbol
             CarTire tire = new CarTire(productId, model, brand, type, price);
             tireList.add(tire);
         }
@@ -58,6 +64,7 @@ public class CarTire extends CarProduct {
         return tireList;
     }
 
+    //toString method that prints out the contents of the prodList hashMap array in a formatted menu style
     @Override
     public String toString() {
         String output = "+-----------------------------------------------------------------+\n";
@@ -79,16 +86,19 @@ public class CarTire extends CarProduct {
         return output;
     }
 
-    public CarProduct getTireProductByID(int tireID){
+    //getTireProductByID method returns a Car Tire Product based on its ID using the prodList Hashmap
+    @Override
+    public CarProduct getProductByID(int tireID){
        
         CarProduct selectedTire = new CarTire();
            
         for(CarProduct tire : prodList){
+            //compares tire.productID with the Input parameter tireID 
             if(tire.productID == tireID){
-                selectedTire = tire;
+                selectedTire = tire; //assigns the tire product if the ID's match
             }
         }
         
-        return selectedTire;
+        return selectedTire; //returns the tire product based on product ID
     }
 }
