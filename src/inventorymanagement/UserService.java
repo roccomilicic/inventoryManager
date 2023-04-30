@@ -5,6 +5,9 @@ package inventorymanagement;
  * @author Rocco + Beedrix
  */
 
+package InvenMan;
+
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class UserService {
@@ -39,27 +42,41 @@ public class UserService {
     public void userMenu(Inventory inventory, CreateOrder createAnOrder) {
         // Gets the user input for the update inventory menu
 
-        printUserMenu();
-        System.out.println("Select an option: ");
-        int selectedMenuOption = scan.nextInt();
+        boolean validOptionSelected = false;
+        while (!validOptionSelected) {
+            printUserMenu();
+            System.out.println("Select an option: ");
+            int selectedMenuOption;
+            try {
+                selectedMenuOption = scan.nextInt();
+            } catch (InputMismatchException e) {
+                // Handle non-integer input
+                System.out.println("> Invalid input. Please enter a number.");
+                scan.nextLine(); // Consume the invalid input
+                continue;
+            }
 
-        switch (selectedMenuOption) {
-            case 1:
-                System.out.println(inventory.toString());
-                break;
-            case 2:
-                updateInventoryMenu(inventory, createAnOrder);
-                break;
-            case 3:
-                createAnOrder.orderMenu();
-                break;
-            case 4:
-                System.out.println("> Exiting Inventory Manager...");
-                System.exit(0);
-                break;
+            switch (selectedMenuOption) {
+                case 1:
+                    System.out.println(inventory.toString());
+                    validOptionSelected = true;
+                    break;
+                case 2:
+                    updateInventoryMenu(inventory, createAnOrder);
+                    validOptionSelected = true;
+                    break;
+                case 3:
+                    createAnOrder.orderMenu();
+                    validOptionSelected = true;
+                    break;
+                case 4:
+                    System.out.println("> Exiting Inventory Manager...");
+                    System.exit(0);
+                    break;
 
-            default:
-                System.out.println("> Invalid choice. Please try again.");
+                default:
+                    System.out.println("> Invalid choice. Please try again.");
+            }
         }
     }
 
@@ -91,28 +108,43 @@ public class UserService {
 
     public void updateInventoryMenu(Inventory inventory, CreateOrder createAnOrder) {
         // Gets the user input for the update inventory menu 
-        printUpdateInventory();
+        boolean validOptionSelected = false;
+        while (!validOptionSelected) {
+            printUpdateInventory();
 
-        System.out.println("Select an option: ");
-        int updateInventoryOption = scan.nextInt();
+            System.out.println("Select an option: ");
+            int updateInventoryOption;
+            try {
+                updateInventoryOption = scan.nextInt();
+            } catch (InputMismatchException e) {
+                // Handle non-integer input
+                System.out.println("> Invalid input. Please enter a number.");
+                scan.nextLine(); // Consume the invalid input
+                continue;
+            }
 
-        switch (updateInventoryOption) {
-            case 1:
-                printProductOptions();
-                inventory.addProduct();  
-                break;
-            case 2:
-                inventory.removeProduct();
-                break;
-            case 3:
-                inventory.adjustQuantity();
-                break;
-            case 4:
-                System.out.println("> Back to menu.\n");
-                userMenu(inventory, createAnOrder);
-                break;
-            default:
-                System.out.println("> Invalid choice. Please try again.");
+            switch (updateInventoryOption) {
+                case 1:
+                    printProductOptions();
+                    inventory.addProduct();
+                    validOptionSelected = true;
+                    break;
+                case 2:
+                    inventory.removeProduct();
+                    validOptionSelected = true;
+                    break;
+                case 3:
+                    inventory.adjustQuantity();
+                    validOptionSelected = true;
+                    break;
+                case 4:
+                    System.out.println("> Back to menu.\n");
+                    userMenu(inventory, createAnOrder);
+                    validOptionSelected = true;
+                    break;
+                default:
+                    System.out.println("> Invalid choice. Please try again.");
+            }
         }
     }
 
