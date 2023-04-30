@@ -2,6 +2,8 @@ package inventorymanagement;
 
 import java.util.ArrayList;
 
+//CarProduct is an abstract class that stores the attributes shared by all car products. 
+//It has get and set methods for each field
 public abstract class CarProduct {
 
     protected int productID;
@@ -11,23 +13,20 @@ public abstract class CarProduct {
     protected double price;
     protected int quantity;
 
+    //an arraylist storing multiple carproducts used by subclasses 
+    //for user inventory data storage or printing the menu using data 
+    //from CarProduct Text files
     public ArrayList<CarProduct> prodList;
 
-    public CarProduct getProductByID(int prodID) {
-        CarProduct selectedTire = new CarTire();
+    //abstract method inherited by subclasses to retrive product by ID
+    public abstract CarProduct getProductByID(int prodID);
 
-        for (CarProduct tire : prodList) {
-            if (tire.productID == prodID) {
-                selectedTire = tire;
-            }
-        }
-
-        return selectedTire;
-    }
-
-    public void addQuantity(int quantity) { // adds onto the quantity of a product in inventory
+    //adds onto the quantity of a product in inventory
+    public void addQuantity(int quantity) { 
         this.quantity += quantity;
     }
+    
+    //getter and setter methods
     public int getProductId() {
         return this.productID;
     }
