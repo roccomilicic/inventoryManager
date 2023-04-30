@@ -1,4 +1,4 @@
-package InvenMan;
+package inventorymanagement;
 
 import java.util.ArrayList;
 
@@ -28,10 +28,7 @@ public abstract class CarProduct {
     public void addQuantity(int quantity) { // adds onto the quantity of a product in inventory
         this.quantity += quantity;
     }
-
-}
-
-/* public int getProductId() {
+    public int getProductId() {
         return this.productID;
     }
 
@@ -78,4 +75,4 @@ public abstract class CarProduct {
     public void setQuantity(int quant) {
         this.quantity = quant;
     }
- */
+}
