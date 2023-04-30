@@ -24,14 +24,18 @@ public class Inventory {
     private CarProduct product;
 
     public Inventory(String currentUser) { // default constructor
-
         this.inventory2 = new HashMap<Integer, CarProduct>();
         this.currentUser = currentUser;
+        
         setInventoryHashMap();
     }
 
     public void setCurrentUser(String currentUser) {
         this.currentUser = currentUser;
+    }
+
+    public HashMap<Integer, CarProduct> getInventory() {
+        return this.inventory2;
     }
 
     public void setInventoryHashMap() {
@@ -210,7 +214,7 @@ public class Inventory {
             }
 
             pw.println(output);
-            System.out.println("> Inventory added to file '" + newUserInven + "'");
+            //System.out.println("> Inventory added to file '" + newUserInven + "'");
             pw.close();
 
         } catch (FileNotFoundException e) {
@@ -226,7 +230,7 @@ public class Inventory {
     @Override
     public String toString() {
         String output = "+----------------------------------------------------------------------------------+\n";
-        output += "|                                     INVENTORY:                                   |\n";
+        output += "|    YOUR INVENTORY.                                                               |\n";
         output += "+--------+----------------+---------------+------------+--------------+------------+\n";
         output += "| ID     | PRODUCT NAME   |     BRAND     |    PRICE   |      TYPE    |  QUANTITY  |\n";
         output += "+--------+----------------+---------------+------------+--------------+------------+\n";
@@ -240,5 +244,4 @@ public class Inventory {
         output += "+----------------------------------------------------------------------------------+\n";
         return output;
     }
-
 }
