@@ -14,28 +14,29 @@ public class UserService {
     public UserService() {
     }
 
-    public void startProgram(UserService userServ, Inventory inventory) {
+    public void startProgram(UserService userServ, Inventory inventory, CreateOrder createAnOrder) {
         /*Starts program by calling all the needed methods before user interacts
         with the CUI. Then runs a loop on the menu till user exits*/
 
         //productList.generateProducts();
         while (true) { // loops menu till user quits the program
-            userServ.userMenu(inventory); // starts off the program (would come after user login once implemented)
+            userServ.userMenu(inventory, createAnOrder); // starts off the program (would come after user login once implemented)
         }
     }
 
     public static void printUserMenu() {
         // Prints the user menu
         System.out.printf("+-------------------------------------------------+\n");
-        System.out.printf("|                  INVENTORY MANAGER              |\n");
+        System.out.printf("|    INVENTORY MANAGER.                           |\n");
         System.out.printf("+-------------------------------------------------+\n");
         System.out.printf("| %-2s. %-42s  |\n", "1", "View inventory");
         System.out.printf("| %-2s. %-42s  |\n", "2", "Update inventory");
-        System.out.printf("| %-2s. %-42s  |\n", "3", "Exit program");
+        System.out.printf("| %-2s. %-42s  |\n", "3", "Create an order");
+        System.out.printf("| %-2s. %-42s  |\n", "4", "Exit program");
         System.out.printf("+-------------------------------------------------+\n");
     }
 
-    public void userMenu(Inventory inventory) {
+    public void userMenu(Inventory inventory, CreateOrder createAnOrder) {
         // Gets the user input for the update inventory menu
 
         printUserMenu();
@@ -47,9 +48,12 @@ public class UserService {
                 System.out.println(inventory.toString());
                 break;
             case 2:
-                updateInventoryMenu(inventory);
+                updateInventoryMenu(inventory, createAnOrder);
                 break;
             case 3:
+                createAnOrder.orderMenu();
+                break;
+            case 4:
                 System.out.println("> Exiting Inventory Manager...");
                 System.exit(0);
                 break;
@@ -62,7 +66,7 @@ public class UserService {
     public void printUpdateInventory() {
         // Prints the update inventory menu
         System.out.printf("+-------------------------------------------------+\n");
-        System.out.printf("|                  UPDATE INVENTORY               |\n");
+        System.out.printf("|    UPDATE INVENTORY.                            |\n");
         System.out.printf("+-------------------------------------------------+\n");
         System.out.printf("| %-2s. %-43s |\n", "1", "Add product to inventory");
         System.out.printf("| %-2s. %-43s |\n", "2", "Remove product from inventory");
@@ -71,20 +75,21 @@ public class UserService {
         System.out.printf("+-------------------------------------------------+\n");
     }
 
-    public void printProductOptions() {
+    public void printProductOptions() { // ADD OPTION TO GO BACK
 
         System.out.printf("+-------------------------------------------------+\n");
-        System.out.printf("|                  UPDATE INVENTORY               |\n");
+        System.out.printf("|    ADD PRODUCT.                                 |\n");
         System.out.printf("+-------------------------------------------------+\n");
         System.out.printf("| %-2s. %-43s |\n", "1", "Add Car Tires");
         System.out.printf("| %-2s. %-43s |\n", "2", "Add Car Side Mirror");
         System.out.printf("| %-2s. %-43s |\n", "3", "Add Car Engine");
         System.out.printf("| %-2s. %-43s |\n", "4", "Add Car Head Lights");
+        System.out.printf("| %-2s. %-43s |\n", "5", "Go back to menu");
         System.out.printf("+-------------------------------------------------+\n");
 
     }
 
-    public void updateInventoryMenu(Inventory inventory) {
+    public void updateInventoryMenu(Inventory inventory, CreateOrder createAnOrder) {
         // Gets the user input for the update inventory menu 
         printUpdateInventory();
 
@@ -93,10 +98,8 @@ public class UserService {
 
         switch (updateInventoryOption) {
             case 1:
-                //System.out.println(productList.toString()); // displays products available to add to inventory
                 printProductOptions();
-                inventory.addProduct();
-              
+                inventory.addProduct();  
                 break;
             case 2:
                 inventory.removeProduct();
@@ -106,16 +109,13 @@ public class UserService {
                 break;
             case 4:
                 System.out.println("> Back to menu.\n");
-                userMenu(inventory);
+                userMenu(inventory, createAnOrder);
                 break;
             default:
                 System.out.println("> Invalid choice. Please try again.");
         }
     }
 
-    
-    
-    
     public static void main(String[] args) {
 
         LogIn logIn = new LogIn();
@@ -124,9 +124,9 @@ public class UserService {
         String currentUser = logIn.getCurrentUser();
 
         Inventory inventory = new Inventory(currentUser); // calls default constructor to acces methods
-        //UserProfile currentUserProfile = new UserProfile(currentUser, inventory);
+        CreateOrder createAnOrder = new CreateOrder(currentUser);
 
         UserService userServ = new UserService(); // calls default constructor to acces methods
-        userServ.startProgram(userServ, inventory);
+        userServ.startProgram(userServ, inventory, createAnOrder);
     }
 }
