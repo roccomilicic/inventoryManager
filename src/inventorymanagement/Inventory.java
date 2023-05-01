@@ -16,6 +16,9 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.InputMismatchException;
 
+//The Inventory class is responsible for dealing with updating user inventory files 
+//it allows the program to access the users inventory text files and update quantity
+//and remove items
 public class Inventory {
 
     private String inventoryTxt;
@@ -24,6 +27,7 @@ public class Inventory {
     private String currentUser;
     private CarProduct product;
 
+    
     public Inventory(String currentUser) { // default constructor
         this.inventory2 = new HashMap<Integer, CarProduct>();
         this.currentUser = currentUser;
@@ -39,18 +43,22 @@ public class Inventory {
         return this.inventory2;
     }
 
+    //setInventoryHashMap initializes the inventory2 HashMap field 
+    //with the contents of the users inventory text file
     public void setInventoryHashMap() {
 
         File file = new File("UserProfiles/" + this.currentUser + '/' + this.currentUser + "Inventory.txt");
 
+        //checks if file exists
         if (file.exists()) {
             try (BufferedReader br = new BufferedReader(new FileReader(file))) {
 
                 if (file.length() != 0) {
                     String line;
-
+                    //block of code takes each line in the file and sepereates the String by comma
+                    //and stores in String array called parts to be used to initialize a CarProduct Object
                     while ((line = br.readLine()) != null) {
-                        // skip empty or whitespace-only lines
+                        //skip empty or whitespace-only lines
                         if (line.trim().isEmpty()) {
                             continue;
                         }
@@ -68,6 +76,8 @@ public class Inventory {
                         this.inventory2.put(id, setProduct);
                     }
                 } else {
+                    //if the user inventory text file has no content i.e. file.length == 0 OR line.trim().isEmpty 
+                    //returns true then inventory2 is initialized with an empty hashMap
                     this.inventory2 = new HashMap<Integer, CarProduct>();
                 }
 
@@ -75,11 +85,15 @@ public class Inventory {
                 System.err.println(e.getMessage());
             }
         } else {
+            //calls the inventoryToTxt method which writes to the file and creates 
+            //a txt file for the user if the file didnt already exist
             inventoryToTxt();
             System.out.println("> New User text file created.");
         }
     }
 
+    //checks weather the users inventory text file already contains a specific car product
+    //returns true if it does and false if not
     public boolean hasProduct(CarProduct prod) {
         boolean hasProd = false;
         for (HashMap.Entry<Integer, CarProduct> entry : inventory2.entrySet()) {
@@ -93,11 +107,14 @@ public class Inventory {
         return hasProd;
     }
 
+    //addProduct is responsible for adding new car products to the users inventory txt file
+    //and if the user already has that product it adds on to the quantity (+=)
     public void addProduct() {
 
         int productToAdd = 0;
         String x = "";
 
+        //prompts user to input a number to select which product type to add to inventory
         while (true) {
             System.out.println("Select the product type you wish to add: ");
 
@@ -112,6 +129,8 @@ public class Inventory {
             }
         }
 
+        //checks which number user selected and initializes the CarProduct abstract 
+        //Object with one of the subclasses based on user selection
         switch (productToAdd) {
             case 1:
                 this.product = new CarTire();
@@ -137,6 +156,7 @@ public class Inventory {
                 return;
         }
 
+        //prompts user to enter a number to select the specific car product item by id 
         while (true) {
             System.out.println(product.toString());
             System.out.println("Select the " + x + " you want to add to inventory based on ID: ");
@@ -152,18 +172,46 @@ public class Inventory {
             }
         }
 
+        //assigns a temporary CarProduct object with the car product slected by the user 
         CarProduct tempProd = product.getProductByID(productToAdd);
 
+        //checks weather tempProd is an existing product and that it is not outside the range of 
+        //choices. The user can put in any number and tempProd will be initialized with nulls and 
+        //0's which is why it is checked for possible null values.
         if (tempProd != null && tempProd.productModel != null) {
             if (hasProduct(tempProd)) {
-                System.out.println("How many would you like to add: ");
-                int quantityToAdd = scan.nextInt();
+
+                int quantityToAdd = 0;
+
+                while (true) {
+                    System.out.println("How many would you like to add: ");
+                    try {
+                        quantityToAdd = scan.nextInt();
+                        break; // break out of the loop if input is valid
+                    } catch (InputMismatchException e) {
+                        // Handle non-integer input
+                        System.out.println("> Invalid input. Please enter a number.");
+                        scan.nextLine(); //consume the invalid input
+                        continue;
+                    }
+                }
+
                 inventory2.get(productToAdd).addQuantity(quantityToAdd);
             } else {
-                System.out.println("How many would you like to add: ");
-                int quantityToAdd = scan.nextInt();
-                tempProd.addQuantity(quantityToAdd);
+                int quantityToAdd = 0;
 
+                while (true) {
+                    System.out.println("How many would you like to add: ");
+                    try {
+                        quantityToAdd = scan.nextInt();
+                        break; // break out of the loop if input is valid
+                    } catch (InputMismatchException e) {
+                        // Handle non-integer input
+                        System.out.println("> Invalid input. Please enter a number.");
+                        scan.nextLine(); //consume the invalid input
+                        continue;
+                    }
+                }
                 inventory2.put(tempProd.productID, tempProd);
                 System.out.println("> Added " + tempProd.productID + " to inventory");
             }
@@ -171,10 +219,12 @@ public class Inventory {
             inventoryToTxt();
         } else {
             System.out.println("> Item not found!");
-            
         }
     }
 
+    //removeProduct() method removes an entire item from the user inventory text file.
+    //it does this by first removing the selected CarProduct from the inventory2 hashMap
+    //and then printing the updated inventory2 hashMap to the users inventory txt file
     public void removeProduct() {
 
         if (inventory2.isEmpty()) {
@@ -195,6 +245,11 @@ public class Inventory {
         }
     }
 
+    //similar to the removeProduct() method, the adjustQuantity() method adjusts the quantity
+    //of an existing car product stored in the user inventory txt file. This method finds the
+    //user selected car product in the inventory2 hashMap and updates the quantity of that car
+    //product according to user input. This method then prints the updated inventory2 hashMap to 
+    //the users txt file
     public void adjustQuantity() {
 
         if (inventory2.isEmpty()) {
@@ -218,6 +273,9 @@ public class Inventory {
         }
     }
 
+    //inventoryToTxt() method is responsible for writing to the user inventory txt file.
+    //It does this by overwritting an existing txt file with the current inventory2 hashMap 
+    //and if the users inventory txt file doesnt already exist it creates a new text file.
     public void inventoryToTxt() {
         try {
 
@@ -242,10 +300,12 @@ public class Inventory {
 
     }
 
+    //getInventoryTxt() method returns the string of the inventoryTxt field
     public String getInventoryTxt() {
         return this.inventoryTxt;
     }
 
+    //Overrides the toString of this class to print out the contents of the inventory2 hashMap in a formatted inventory style
     @Override
     public String toString() {
         String output = "+----------------------------------------------------------------------------------+\n";
