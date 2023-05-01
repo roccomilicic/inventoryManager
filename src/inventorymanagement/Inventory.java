@@ -212,6 +212,7 @@ public class Inventory {
                         continue;
                     }
                 }
+                tempProd.quantity = quantityToAdd;
                 inventory2.put(tempProd.productID, tempProd);
                 System.out.println("> Added " + tempProd.productID + " to inventory");
             }
@@ -324,4 +325,5 @@ public class Inventory {
         return output;
     }
 }
+
 
