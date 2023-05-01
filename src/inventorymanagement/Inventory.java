@@ -95,32 +95,24 @@ public class Inventory {
 
     public void addProduct() {
 
-        boolean userValid = false;
         int productToAdd = 0;
-        while (!userValid) {
+        String x = "";
 
+        while (true) {
             System.out.println("Select the product type you wish to add: ");
+
             try {
                 productToAdd = scan.nextInt();
-
+                break; // break out of the loop if input is valid
             } catch (InputMismatchException e) {
-                // Handle non-integer input
+                //handle non-integer input
                 System.out.println("> Invalid input. Please enter a number.");
                 scan.nextLine(); //consume the invalid input
                 continue;
             }
-            userValid = true;
-
         }
 
-        addProduct(productToAdd);
-    }
-
-    public void addProduct(int prodOption) {
-
-        String x = "";
-
-        switch (prodOption) {
+        switch (productToAdd) {
             case 1:
                 this.product = new CarTire();
                 x = "Tire";
@@ -139,20 +131,29 @@ public class Inventory {
                 break;
             case 5:
                 return;
-
             default:
                 System.out.println("> Invalid choice. Please try again.");
                 addProduct();
-
+                return;
         }
 
-        System.out.println(product.toString());
-        System.out.println("Select the " + x + " you want to add to inventory based on ID: ");
-        int productToAdd = scan.nextInt();
-        
-        boolean validOption2 = false;
+        while (true) {
+            System.out.println(product.toString());
+            System.out.println("Select the " + x + " you want to add to inventory based on ID: ");
+
+            try {
+                productToAdd = scan.nextInt();
+                break; // break out of the loop if input is valid
+            } catch (InputMismatchException e) {
+                // Handle non-integer input
+                System.out.println("> Invalid input. Please enter a number.");
+                scan.nextLine(); //consume the invalid input
+                continue;
+            }
+        }
+
         CarProduct tempProd = product.getProductByID(productToAdd);
-        
+
         if (tempProd != null && tempProd.productModel != null) {
             if (hasProduct(tempProd)) {
                 System.out.println("How many would you like to add: ");
@@ -165,10 +166,9 @@ public class Inventory {
 
                 inventory2.put(tempProd.productID, tempProd);
                 System.out.println("> Added " + tempProd.productID + " to inventory");
-
             }
-            inventoryToTxt();
 
+            inventoryToTxt();
         } else {
             System.out.println("> Item not found!");
             
@@ -264,3 +264,4 @@ public class Inventory {
         return output;
     }
 }
+
